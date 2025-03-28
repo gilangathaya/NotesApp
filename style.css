@@ -8,18 +8,10 @@ body {
 }
 
 main {
-    display: grid;
-    grid-template-columns: 1fr;
     width: 100%;
-    max-width: 600px;
+    max-width: 1200px;
     margin: 20px auto;
     padding: 0 15px;
-    gap: 20px;
-}
-
-#add-note, #notes-list {
-    display: grid;
-    gap: 15px;
 }
 
 /* Header */
@@ -43,6 +35,49 @@ footer {
     font-size: 1rem;
     width: 100%;
     box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Add Note Section */
+#add-note {
+    margin-bottom: 20px;
+}
+
+/* Notes Container */
+#notes-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+/* Note Card */
+.note-card {
+    background-color: #e6f2f0;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: grid;
+    gap: 10px;
+    transition: transform 0.3s ease;
+}
+
+.note-card:hover {
+    transform: scale(1.03);
+}
+
+.note-card h3 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.1rem;
+}
+
+.note-card p {
+    margin: 10px 0;
+    color: #34495e;
+}
+
+.note-card small {
+    color: #7f8c8d;
+    font-size: 0.8rem;
 }
 
 /* Action Buttons */
@@ -100,42 +135,25 @@ button:hover {
     background-color: #218838;
 }
 
-/* Notes Container */
-#notes-container {
-    display: grid;
-    gap: 10px;
-}
-
-/* Note Card */
-.note-card {
-    background-color: white;
-    border-radius: 8px;
-    padding: 15px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    display: grid;
-    gap: 10px;
-}
-
-.note-card h3 {
-    margin: 0;
-    color: #333;
-}
-
-.note-card small {
-    color: #666;
-    margin-top: 10px;
-}
-
 /* Error Message */
 #error-message {
     color: red;
     font-size: 0.9rem;
 }
 
-/* Responsive Adjustments */
-@media screen and (max-width: 600px) {
+/* Responsive Design */
+@media screen and (max-width: 1024px) {
+    #notes-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    #notes-container {
+        grid-template-columns: 1fr;
+    }
+
     main {
-        max-width: 100%;
         padding: 0 10px;
     }
 }
