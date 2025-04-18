@@ -4,6 +4,7 @@ class NoteItem extends HTMLElement {
         this.title = this.getAttribute("title");
         this.body = this.getAttribute("body");
         this.createdAt = new Date(this.getAttribute("createdAt")).toLocaleString();
+        this.archived = this.getAttribute("archived") === "true";
 
         this.innerHTML = `
             <div class="note-card">
@@ -11,45 +12,46 @@ class NoteItem extends HTMLElement {
                 <p>${this.body}</p>
                 <small>Dibuat pada: ${this.createdAt}</small>
                 <div class="actions">
-                    <button class="archive-btn">Arsipkan</button>
+                    <button class="archive-btn">${this.archived ? 'Batalkan Arsip' : 'Arsipkan'}</button>
                     <button class="delete-btn">Hapus</button>
                 </div>
             </div>
         `;
 
-        this.querySelector(".archive-btn").addEventListener("click", () => this.archiveNote());
+        this.querySelector(".archive-btn").addEventListener("click", () => this.toggleArchiveStatus());
         this.querySelector(".delete-btn").addEventListener("click", () => this.deleteNote());
     }
 
-    archiveNote() {
-        const note = notesData.find(n => n.id === this.id);
-        if (note) {
-            note.archived = !note.archived;
-            document.dispatchEvent(new Event("notesUpdated"));
+    async toggleArchiveStatus() {
+        try {
+            let success;
+            if (this.archived) {
+                success = await unarchiveNote(this.id);
+            } else {
+                success = await archiveNote(this.id);
+            }
+            
+            if (success) {
+                document.dispatchEvent(new Event("notesUpdated"));
+            }
+        } catch (error) {
+            console.error('Error toggling archive status:', error);
         }
     }
 
-    deleteNote() {
-        const index = notesData.findIndex(n => n.id === this.id);
-        if (index !== -1) {
-            notesData.splice(index, 1);
-            document.dispatchEvent(new Event("notesUpdated"));
+    async deleteNote() {
+        try {
+            const confirmDelete = confirm('Apakah Anda yakin ingin menghapus catatan ini?');
+            if (confirmDelete) {
+                const success = await deleteNote(this.id);
+                if (success) {
+                    document.dispatchEvent(new Event("notesUpdated"));
+                }
+            }
+        } catch (error) {
+            console.error('Error deleting note:', error);
         }
     }
 }
 
 customElements.define("note-item", NoteItem);
-
-document.addEventListener("notesUpdated", () => {
-    document.querySelector("#notes-container").innerHTML = "";
-    notesData
-        .filter(note => !note.archived)
-        .forEach(note => {
-            const noteElement = document.createElement("note-item");
-            noteElement.setAttribute("id", note.id);
-            noteElement.setAttribute("title", note.title);
-            noteElement.setAttribute("body", note.body);
-            noteElement.setAttribute("createdAt", note.createdAt);
-            document.querySelector("#notes-container").appendChild(noteElement);
-        });
-});

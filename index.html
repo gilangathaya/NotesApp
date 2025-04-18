@@ -10,6 +10,12 @@
     <custom-header></custom-header>
     
     <main>
+        <div id="notification" class="notification"></div>
+        <div id="loading-indicator" class="loading-indicator">
+            <div class="spinner"></div>
+            <p>Loading...</p>
+        </div>
+        
         <section id="add-note">
             <h2>Tambah Catatan</h2>
             <form id="note-form">
@@ -24,15 +30,25 @@
             </form>
         </section>
         
+        <div class="tabs">
+            <button id="show-active" class="tab-btn active">Catatan Aktif</button>
+            <button id="show-archived" class="tab-btn">Catatan Diarsipkan</button>
+        </div>
+        
         <section id="notes-list">
             <h2>Daftar Catatan</h2>
             <div id="notes-container"></div>
+        </section>
+        
+        <section id="archived-notes" style="display: none;">
+            <h2>Catatan Diarsipkan</h2>
+            <div id="archived-notes-container"></div>
         </section>
     </main>
 
     <custom-footer></custom-footer>
 
-    <script src="data/notesData.js"></script>
+    <script src="api.js"></script>
     <script src="script.js"></script>
     <script src="components/header.js"></script>
     <script src="components/footer.js"></script>
